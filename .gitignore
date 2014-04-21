@@ -1,8 +1,10 @@
 # remove all CMake files
 *ake*
-
+!CMakeLists.txt
 # remove all objects
 *.o
 
 # remove all txt
 *.txt
+!CMakeLists.txt
+
