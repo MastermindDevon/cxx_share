@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# $1 = options
+
+if [ "$1" = "dump" ]; then
+	rm -f dumpfiles/*.txt
+else
+
+	# grab all elf files, make writeable
+	elfs=$(file ./* | grep "ELF" | sed -e "s/\.\/\(.*\)\:.*/\1/g")
+	chown nmaterise ./*
+	rm $elfs
+	
+	# clean up the remaining CMakefiles
+	rm -r -f *ake* 
+	
+	rm -r -f ./.kdev4
+	rm -r -f ./*.kdev4
+fi

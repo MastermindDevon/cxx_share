@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# script to build new C file
+# $1 = file name
+# $2 = src directory
+# $3 = code description
+
+# get time stamp
+time_stamp=$( date )
+
+# working space
+blank_lines="\n\n\n\n\n"
+
+# new file skeleton text
+echo -e "/*\n * ${3}\n *\n * Author: Nick Materise\n * Date Created: ${time_stamp}\n * \n */${blank_lines}int main()\n{\n\n\n\treturn 0;\n}" >$2/$1.c 
+
+
+
+
+

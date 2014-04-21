@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# script to start .h file
+# $1 = file name
+# $2 = src dir
+
+# get time stamp
+time_stamp=$( date )
+
+# working space
+blank_lines="\n\n\n\n\n"
+
+# header guards
+HEADER_GUARD=$(echo -e ${1} | sed "s/\(.*\)/\U\1/")
+
+# write new file with name, dir
+echo -e "#ifndef ${HEADER_GUARD} \n#define ${HEADER_GUARD}\n/*\n * Author: Nick Materise\n * Date Created: ${time_stamp}\n * \n */ ${blank_lines}#endif" > $2/$1.h
+
+
+
+
+
