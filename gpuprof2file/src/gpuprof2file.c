@@ -1,58 +1,89 @@
 /*
- * GPU Profilining Data Collection 
-main program
+ * Assembles Profiling Buffer
  *
  * Author: Nick Materise
- * Date Created: Sun Apr 20 18:38:25 EDT 2014
+ * Date Created: Sun Apr 20 18:39:19 EDT 2014
  * 
  */
 
 #include "gpuprof2file.h"
 
-int main()
+/* initialize counter stack */
+char** init_counter_stack(const int num_counters,
+							const int num_entries,
+							const char **counter_str)
 {
-
-	/* constants */
-	const num_entries = 100;
-	const num_counters = 5;
-
 	int i,j;
+	printf("In the initializer...\n");
+	
+	/* pointer to be copied at end */
+	char **cnt_stk;
 
-	/* dummy counter names */
-	const char *my_strs[5] = {"valuUtil","cacheHit",
-								"saluUtil","regData", 
-								"numWaves"};
-
-
-	/* initialize counter buffer */
-	char **my_stk = init_counter_stack(
-								num_counters,
-								num_entries,
-								my_strs);
-
-	/* dummy counter data */
-	float *mytimer_buffer = malloc(sizeof(float)*num_entries*num_counters);
-	float *new_times = malloc(sizeof(float)*num_entries*num_counters);
-	for(i = 0; i < num_entries*num_counters; i++)
-		mytimer_buffer[i] = (float)i;	
-
-
-	/* push names and data into stack */
+	/* auxiliary memory object */
+	cnt_stk = malloc(sizeof(char*)*num_counters*num_entries);
 	for(i = 0; i < num_entries; i++)
 		for(j = 0; j < num_counters; j++)
-		push_counter_names_data(my_strs[j],mytimer_buffer[i*num_counters+j],my_stk,new_times);
+			cnt_stk[i*num_counters+j] = 
+					malloc(sizeof(char)*strlen(counter_str[j]));
 
-	
-	/* print buffer contents */
-	printf("Printing test data...\n");
+	return cnt_stk;
 
-	/* write data to file */
-	write_files(num_entries,num_counters,
-				my_strs, new_times);
-	
-	/* free malloc data */
-	free(mytimer_buffer);
-	free(new_times);
-
-	return 0;
 }
+
+/* save names */
+void push_counter_names_data(const char *counter_name, float timer, 
+							char **cnt_stk, float *timers)
+{
+	
+	/* increment for each call */
+	static int indx = 0;
+	printf("Indx: %d\n",indx);
+	
+	/* copy new name into counter_name */
+	strcpy(cnt_stk[indx],counter_name);
+	printf("Current Str: %s\n",cnt_stk[indx]);
+
+	/* push data into stack */
+	timers[indx] = timer;
+	
+	indx++;
+
+}
+
+/* write data to files */
+void write_files(const int num_entries, const int num_counters,
+				const char **counter_names, float *timers)
+{
+
+	int i, j;
+
+	/* pointer to file objects */
+	FILE *file_objs;
+	char file_name[50];
+	float *sub_timers = malloc(sizeof(float)*num_entries);
+
+
+	/* loop through entries, counters */
+	for(i = 0; i < num_counters; i++)
+	{
+		/* grab iteration number */
+		strcpy(file_name,"dumpfiles/");
+		strcat(file_name,counter_names[i]);
+		
+		strcat(file_name,".txt");
+		file_objs = fopen(file_name,"w");
+
+		/* write data to file */
+		for(j = 0; j < num_entries; j++)
+		{
+			sub_timers[j] = timers[j*num_counters+i];
+			fprintf(file_objs,"%0.8f\n",sub_timers[j]);
+		}
+		
+	}
+
+	free(sub_timers);
+
+}
+
+	

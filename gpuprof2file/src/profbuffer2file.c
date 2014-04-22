@@ -17,8 +17,6 @@ void write_files(const int num_entries, const int num_counters,
 	/* pointer to file objects */
 	FILE *file_objs;
 	char file_name[50];
-	char aux_name[50];
-	char new_line = '\n';
 	float *sub_timers = malloc(sizeof(float)*num_entries);
 
 
@@ -28,20 +26,17 @@ void write_files(const int num_entries, const int num_counters,
 		/* grab iteration number */
 		strcpy(file_name,"dumpfiles/");
 		strcat(file_name,counter_names[i]);
-		sprintf(aux_name,"%d.txt",i);
 		
-		strcat(file_name,aux_name);
+		strcat(file_name,".txt");
 		file_objs = fopen(file_name,"w");
 
 		/* write data to file */
 		for(j = 0; j < num_entries; j++)
 		{
 			sub_timers[j] = timers[j*num_counters+i];
-			//fwrite(&timers[j*num_counters+i],sizeof(float),1,file_objs);
-			//fwrite(&new_line,sizeof(char),1,file_objs);
+			fprintf(file_objs,"%0.8f\n",sub_timers[j]);
 		}
 		
-		fwrite(sub_timers,sizeof(float),num_entries,file_objs);
 
 	}
 

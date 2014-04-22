@@ -13,16 +13,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef struct counter_stack counter_stack;
-
-/* Container for counter data, name, etc */
-struct counter_stack
-{
-	char **counter_name;
-	float *timer_data;
-	int num_counters,num_entries;
-};
-
 /* initialize counter stack */
 char** init_counter_stack(const int num_counters,
 							const int num_entries,

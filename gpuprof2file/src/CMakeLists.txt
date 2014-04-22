@@ -23,13 +23,10 @@ LINK_DIRECTORIES(
 add_executable(
 gpuprof2file
 gpuprof2file.c
-profbuffer2file.c
-prof_buffer_asm.c
+gpuprof2file_maintest.c
 )
 
 
 # C-Files for GPU OpenCL Code:
 set_source_files_properties(gpuprof2file.c PROPERTIES LANGUAGE C)
-set_source_files_properties(profbuffer2file.c PROPERTIES LANGUAGE C)
-set_source_files_properties(prof_buffer_asm.c PROPERTIES LANGUAGE C)
-
+set_source_files_properties(gpuprof2file_maintest.c PROPERTIES LANGUAGE C)
